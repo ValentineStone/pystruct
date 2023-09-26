@@ -107,11 +107,7 @@ const typePackers = {
   P: bind(DataView.prototype.setUint32),
 }
 
-const parsedCache = new Map()
 const parseFormat = format => {
-  if (parsedCache.has(format))
-    return parsedCache.get(format)
-
   let littleEndian
   const ch = format[0]
   if (ch === '<')
@@ -121,7 +117,10 @@ const parseFormat = format => {
   else if (ch === '=')
     littleEndian = defaultLittleEndian
   else
-    throw new Error('Using native size and alignment (first character is \'@\' or ommited) is not supported!')
+    throw new Error(
+      'Using native size and alignment ' +
+      '(first character is \'@\' or ommited) is not supported!'
+    )
 
   let numstr = ''
   const parsedFormat = []
@@ -130,6 +129,8 @@ const parseFormat = format => {
   for (let i = 1; i < format.length; i++) {
     const ch = format[i]
     if (isNaN(ch)) {
+      if (!(ch in typeLengths))
+        throw new Error(`Unknown format character '${ch}'`)
       let num = numstr === '' ? 1 : +numstr
       numstr = ''
       if (ch === 's') {
@@ -146,9 +147,7 @@ const parseFormat = format => {
     }
   }
 
-  const parsed = [parsedFormat, littleEndian, maxLength]
-  parsedCache.set(format, parsed)
-  return parsed
+  return { parsedFormat, littleEndian, maxLength }
 }
 
 const textify = v => v.map(
@@ -156,7 +155,8 @@ const textify = v => v.map(
 
 const unpack = (format, buff, stringify = false) => {
   const view = new DataView(buff)
-  const [parsedFormat, le] = parseFormat(format)
+  const { parsedFormat, littleEndian: le } =
+    typeof format === 'string' ? parseFormat(format) : format
   const unpacked = []
   let pointer = 0
   for ([ch, len] of parsedFormat) {
@@ -173,7 +173,8 @@ const unpack = (format, buff, stringify = false) => {
 }
 
 const pack = (format, ...values) => {
-  const [parsedFormat, le, maxLength] = parseFormat(format)
+  const { parsedFormat, littleEndian: le, maxLength } =
+    typeof format === 'string' ? parseFormat(format) : format
   const packed = new ArrayBuffer(maxLength, { maxByteLength: maxLength + 1 })
   const view = new DataView(packed)
   let pointer = 0
@@ -196,8 +197,4 @@ module.exports = {
   unpack,
   pack,
   parseFormat,
-  compile: format => ({
-    pack: (...values) => pack(format, ...values),
-    unpack: buff => unpack(format, buff),
-  })
 }
