@@ -49,10 +49,10 @@ const typeUnpackers = {
   e: getFloat16,
   f: bind(DataView.prototype.getFloat32),
   d: bind(DataView.prototype.getFloat64),
-  s: (view, offs, leIgnored, len) => view.buffer.slice(offs, offs + len),
+  s: (view, offs, leIgnored, len) => view.buffer.slice(view.byteOffset + offs, view.byteOffset + offs + len),
   p: (view, offs) => {
     const len = view.getUint8(offs)
-    return view.buffer.slice(offs + 1, offs + 1 + len)
+    return view.buffer.slice(view.byteOffset + offs + 1, view.byteOffset + offs + 1 + len)
   },
   P: bind(DataView.prototype.getUint32),
 }
@@ -80,7 +80,7 @@ const typePackers = {
   f: bind(DataView.prototype.setFloat32),
   d: bind(DataView.prototype.setFloat64),
   s: (view, offs, value, leIgnored, len) => {
-    const viewSlice = new Uint8Array(view.buffer, offs)
+    const viewSlice = new Uint8Array(view.buffer, view.byteOffset + offs)
     if (value instanceof ArrayBuffer)
       viewSlice.set(new Uint8Array(value))
     else if (value instanceof Uint8Array)
@@ -90,7 +90,7 @@ const typePackers = {
     return len
   },
   p: (view, offs, value, leIgnored) => {
-    const viewSlice = new Uint8Array(view.buffer, offs + 1)
+    const viewSlice = new Uint8Array(view.buffer, view.byteOffset + offs + 1)
     let len = value?.byteLength || 0
     if (value instanceof ArrayBuffer)
       viewSlice.set(new Uint8Array(value))
@@ -172,7 +172,7 @@ const unpack = (format, buff, stringify = false) => {
   return stringify ? textify(unpacked) : unpacked
 }
 
-const pack = (format, values, packInto, packIntoOffset = 0) => {
+const pack = (format, values, packInto) => {
   const { parsedFormat, littleEndian: le, maxLength } =
     typeof format === 'string' ? parseFormat(format) : format
   let view
@@ -181,10 +181,10 @@ const pack = (format, values, packInto, packIntoOffset = 0) => {
   if (packInto) {
     if (packInto.byteLength < maxLength)
       throw new Error('Can not pack into, provided buffer is smaller than required by this format')
-    view = new DataView(packInto.buffer, packIntoOffset)
+    view = new DataView(packInto.buffer, packInto.byteOffset)
   } else {
     packed = new Uint8Array(maxLength)
-    view = new DataView(packed.buffer)
+    view = new DataView(packed.buffer, packed.byteOffset)
   }
   let pointer = 0
 
