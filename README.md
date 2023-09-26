@@ -1,3 +1,4 @@
+# pystruct
 # `pystruct` — Interpret bytes as packed binary data
 
 Does basycally the same as Python's struct module:  
@@ -32,466 +33,39 @@ Does not support `int64_t` and `uint64_t`, mines does via `BigInt`
 
 ## Docs for ease of reference ([copied from python](https://docs.python.org/3/library/struct.html#byte-order-size-and-alignment))
 
-<table>
-  <thead>
-    <tr>
-      <th>
-        Character
-      </th>
-      <th>
-        Byte order
-      </th>
-      <th>
-        Size
-      </th>
-      <th>
-        Alignment
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        @
-      </td>
-      <td>
-        native (not supported, will throw *)
-      </td>
-      <td>
-        native
-      </td>
-      <td>
-        native
-      </td>
-    </tr>
-    <tr>
-      <td>
-        =
-      </td>
-      <td>
-        native
-      </td>
-      <td>
-        standard
-      </td>
-      <td>
-        none
-      </td>
-    </tr>
-    <tr>
-      <td>
-        &lt;
-      </td>
-      <td>
-        little-endian
-      </td>
-      <td>
-        standard
-      </td>
-      <td>
-        none
-      </td>
-    </tr>
-    <tr>
-      <td>
-        &gt;
-      </td>
-      <td>
-        big-endian
-      </td>
-      <td>
-        standard
-      </td>
-      <td>
-        none
-      </td>
-    </tr>
-    <tr>
-      <td>
-        !
-      </td>
-      <td>
-        network (= big-endian)
-      </td>
-      <td>
-        standard
-      </td>
-      <td>
-        none
-      </td>
-    </tr>
-  </tbody>
-</table>
+|Character|Byte order|Size|Alignment|
+|-|-|-|-|
+|@|native (not supported, will throw *)|native|native|
+|=|native|standard|none|
+|<|little-endian|standard|none|
+|>|big-endian|standard|none|
+|!|network (= big-endian)|standard|none|
 
 > \* Will throw `Using native size and alignment (first character is \'@\' or ommited) is not supported!`
 
-<table>
-  <thead>
-    <tr>
-      <th>
-        Format
-      </th>
-      <th>
-        C Type
-      </th>
-      <th>
-        Python type
-      </th>
-      <th>
-        Standard size
-      </th>
-      <th>
-        Notes
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        x
-      </td>
-      <td>
-        pad byte
-      </td>
-      <td>
-        no value
-      </td>
-      <td></td>
-      <td>
-        (7)
-      </td>
-    </tr>
-    <tr>
-      <td>
-        c
-      </td>
-      <td>
-        char
-      </td>
-      <td>
-        bytes of length 1
-      </td>
-      <td>
-        1
-      </td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>
-        b
-      </td>
-      <td>
-        signed <span>char
-      </td>
-      <td>
-        integer
-      </td>
-      <td>
-        1
-      </td>
-      <td>
-        (1), (2)
-      </td>
-    </tr>
-    <tr>
-      <td>
-        B
-      </td>
-      <td>
-        unsigned <span>char
-      </td>
-      <td>
-        integer
-      </td>
-      <td>
-        1
-      </td>
-      <td>
-        (2)
-      </td>
-    </tr>
-    <tr>
-      <td>
-        ?
-      </td>
-      <td>
-        _Bool
-      </td>
-      <td>
-        bool
-      </td>
-      <td>
-        1
-      </td>
-      <td>
-        (1)
-      </td>
-    </tr>
-    <tr>
-      <td>
-        h
-      </td>
-      <td>
-        short
-      </td>
-      <td>
-        integer
-      </td>
-      <td>
-        2
-      </td>
-      <td>
-        (2)
-      </td>
-    </tr>
-    <tr>
-      <td>
-        H
-      </td>
-      <td>
-        unsigned <span>short
-      </td>
-      <td>
-        integer
-      </td>
-      <td>
-        2
-      </td>
-      <td>
-        (2)
-      </td>
-    </tr>
-    <tr>
-      <td>
-        i
-      </td>
-      <td>
-        int
-      </td>
-      <td>
-        integer
-      </td>
-      <td>
-        4
-      </td>
-      <td>
-        (2)
-      </td>
-    </tr>
-    <tr>
-      <td>
-        I
-      </td>
-      <td>
-        unsigned <span>int
-      </td>
-      <td>
-        integer
-      </td>
-      <td>
-        4
-      </td>
-      <td>
-        (2)
-      </td>
-    </tr>
-    <tr>
-      <td>
-        l
-      </td>
-      <td>
-        long
-      </td>
-      <td>
-        integer
-      </td>
-      <td>
-        4
-      </td>
-      <td>
-        (2)
-      </td>
-    </tr>
-    <tr>
-      <td>
-        L
-      </td>
-      <td>
-        unsigned <span>long
-      </td>
-      <td>
-        integer
-      </td>
-      <td>
-        4
-      </td>
-      <td>
-        (2)
-      </td>
-    </tr>
-    <tr>
-      <td>
-        q
-      </td>
-      <td>
-        long <span>long
-      </td>
-      <td>
-        integer
-      </td>
-      <td>
-        8
-      </td>
-      <td>
-        (2)
-      </td>
-    </tr>
-    <tr>
-      <td>
-        Q
-      </td>
-      <td>
-        unsigned <span>long long
-      </td>
-      <td>
-        integer
-      </td>
-      <td>
-        8
-      </td>
-      <td>
-        (2)
-      </td>
-    </tr>
-    <tr>
-      <td>
-        n
-      </td>
-      <td>
-        ssize_t
-      </td>
-      <td>
-        integer
-      </td>
-      <td>
-      </td>
-      <td>
-        (3), (10)
-      </td>
-    </tr>
-    <tr>
-      <td>
-        N
-      </td>
-      <td>
-        size_t
-      </td>
-      <td>
-        integer
-      </td>
-      <td></td>
-      <td>
-        (3), (10)
-      </td>
-    </tr>
-    <tr>
-      <td>
-        e
-      </td>
-      <td>
-        (6)
-      </td>
-      <td>
-        float
-      </td>
-      <td>
-        2
-      </td>
-      <td>
-        (4)
-      </td>
-    </tr>
-    <tr>
-      <td>
-        f
-      </td>
-      <td>
-        float
-      </td>
-      <td>
-        float
-      </td>
-      <td>
-        4
-      </td>
-      <td>
-        (4)
-      </td>
-    </tr>
-    <tr>
-      <td>
-        d
-      </td>
-      <td>
-        double
-      </td>
-      <td>
-        float
-      </td>
-      <td>
-        8
-      </td>
-      <td>
-        (4)
-      </td>
-    </tr>
-    <tr>
-      <td>
-        s
-      </td>
-      <td>
-        char[<span>]
-      </td>
-      <td>
-        bytes
-      </td>
-      <td></td>
-      <td>
-        (9)
-      </td>
-    </tr>
-    <tr>
-      <td>
-        p
-      </td>
-      <td>
-        char[<span>]
-      </td>
-      <td>
-        bytes
-      </td>
-      <td></td>
-      <td>
-        (8)
-      </td>
-    </tr>
-    <tr>
-      <td>
-        P
-      </td>
-      <td>
-        void*
-      </td>
-      <td>
-        integer
-      </td>
-      <td></td>
-      <td>
-        (5), (10)
-      </td>
-    </tr>
-  </tbody>
-</table>
+|Format|C Type|Python type|Standard size|Notes|
+|-|-|-|-|-|
+|x|pad byte|no value||(7)|
+|c|char|bytes of length 1|1||
+|b|signed char|integer|1|(1), (2)|
+|B|unsigned char|integer|1|(2)|
+|?|_Bool|bool|1|(1)|
+|h|short|integer|2|(2)|
+|H|unsigned short|integer|2|(2)|
+|i|int|integer|4|(2)|
+|I|unsigned int|integer|4|(2)|
+|l|long|integer|4|(2)|
+|L|unsigned long|integer|4|(2)|
+|q|long long|integer|8|(2)|
+|Q|unsigned long long|integer|8|(2)|
+|n|ssize_t|integer||(3), (10)|
+|N|size_t|integer||(3), (10)|
+|e|(6)|float|2|(4)|
+|f|float|float|4|(4)|
+|d|double|float|8|(4)|
+|s|char[]|bytes||(9)|
+|p|char[]|bytes||(8)|
+|P|void*|integer||(5), (10)|
 
 > (10). My implememntation uses simple `Uint32` for these types for now as a placeholder
 
@@ -499,8 +73,8 @@ Notes:
 
 1. The '?' conversion code corresponds to the _Bool type defined by C99. If this type is not available, it is simulated using a char. In standard mode, it is always represented by one byte.
 
-2. When attempting to pack a non-integer using any of the integer conversion codes, if the non-integer has a __index__() method then that method is called to convert the argument to an integer before packing.  
-Changed in version 3.2: Added use of the __index__() method for non-integers.
+2. When attempting to pack a non-integer using any of the integer conversion codes, if the non-integer has a `__index__()` method then that method is called to convert the argument to an integer before packing.  
+Changed in version 3.2: Added use of the `__index__()` method for non-integers.
 
 3. The 'n' and 'N' conversion codes are only available for the native size (selected as the default or with the '@' byte order character). For the standard size, you can use whichever of the other integer formats fits your application.
 
