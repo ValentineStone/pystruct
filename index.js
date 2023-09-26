@@ -159,7 +159,7 @@ const unpack = (format, buff, stringify = false) => {
     typeof format === 'string' ? parseFormat(format) : format
   const unpacked = []
   let pointer = 0
-  for ([ch, len] of parsedFormat) {
+  for (const [ch, len] of parsedFormat) {
     const value = typeUnpackers[ch](view, pointer, le, len)
     if (ch === 's')
       pointer += len
@@ -179,7 +179,7 @@ const pack = (format, ...values) => {
   const view = new DataView(packed)
   let pointer = 0
 
-  for ([ch, len] of parsedFormat) {
+  for (const [ch, len] of parsedFormat) {
     const v = values.shift()
     const packedLen = typePackers[ch](view, pointer, v, le, len)
     if (ch === 's' || ch === 'p')
