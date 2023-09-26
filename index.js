@@ -175,8 +175,8 @@ const unpack = (format, buff, stringify = false) => {
 const pack = (format, ...values) => {
   const { parsedFormat, littleEndian: le, maxLength } =
     typeof format === 'string' ? parseFormat(format) : format
-  const packed = new ArrayBuffer(maxLength, { maxByteLength: maxLength + 1 })
-  const view = new DataView(packed)
+  const packed = new Uint8Array(maxLength)
+  const view = new DataView(packed.buffer)
   let pointer = 0
 
   for (const [ch, len] of parsedFormat) {
