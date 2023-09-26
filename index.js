@@ -154,7 +154,8 @@ const textify = v => v.map(
   v => v instanceof ArrayBuffer ? textDecoder.decode(v) : v)
 
 const unpack = (format, buff, stringify = false) => {
-  const view = new DataView(buff)
+  const view = new DataView(buff.buffer, buff.byteOffset)
+  console.log(view.getUint8(0))
   const { parsedFormat, littleEndian: le } =
     typeof format === 'string' ? parseFormat(format) : format
   const unpacked = []
@@ -172,11 +173,20 @@ const unpack = (format, buff, stringify = false) => {
   return stringify ? textify(unpacked) : unpacked
 }
 
-const pack = (format, ...values) => {
+const pack = (format, values, packInto, packIntoOffset = 0) => {
   const { parsedFormat, littleEndian: le, maxLength } =
     typeof format === 'string' ? parseFormat(format) : format
-  const packed = new Uint8Array(maxLength)
-  const view = new DataView(packed.buffer)
+  let view
+  let packed
+
+  if (packInto) {
+    if (packInto.byteLength < maxLength)
+      throw new Error('Can not pack into, provided buffer is smaller than required by this format')
+    view = new DataView(packInto.buffer, packIntoOffset)
+  } else {
+    packed = new Uint8Array(maxLength)
+    view = new DataView(packed.buffer)
+  }
   let pointer = 0
 
   for (const [ch, len] of parsedFormat) {
@@ -188,9 +198,13 @@ const pack = (format, ...values) => {
       pointer += typeLengths[ch]
   }
 
-  return packed.byteLength > pointer
-    ? packed.slice(0, pointer)
-    : packed
+  if (packInto)
+    return pointer
+  else
+    return packed.byteLength > pointer
+      ? packed.slice(0, pointer)
+      : packed
+
 }
 
 module.exports = {
