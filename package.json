@@ -1,6 +1,6 @@
 {
   "name": "@valentine-stone/pystruct",
-  "version": "1.2.1",
+  "version": "1.2.4",
   "description": "JavaScript analogue to Python's struct module",
   "main": "index.js",
   "scripts": {

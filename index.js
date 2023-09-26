@@ -155,7 +155,6 @@ const textify = v => v.map(
 
 const unpack = (format, buff, stringify = false) => {
   const view = new DataView(buff.buffer, buff.byteOffset)
-  console.log(view.getUint8(0))
   const { parsedFormat, littleEndian: le } =
     typeof format === 'string' ? parseFormat(format) : format
   const unpacked = []
