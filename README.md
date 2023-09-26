@@ -1,4 +1,4 @@
-# pystruct
+# `pystruct` — Interpret bytes as packed binary data
 
 Does basycally the same as Python's struct module:  
 https://docs.python.org/3/library/struct.html
