@@ -49,10 +49,10 @@ const typeUnpackers = {
   e: getFloat16,
   f: bind(DataView.prototype.getFloat32),
   d: bind(DataView.prototype.getFloat64),
-  s: (view, offs, leIgnored, len) => view.buffer.slice(view.byteOffset + offs, view.byteOffset + offs + len),
+  s: (view, offs, leIgnored, len) =>new Uint8Array(view.buffer, view.byteOffset + offs, len),
   p: (view, offs) => {
     const len = view.getUint8(offs)
-    return view.buffer.slice(view.byteOffset + offs + 1, view.byteOffset + offs + 1 + len)
+    return new Uint8Array(view.buffer, view.byteOffset + offs + 1, len)
   },
   P: bind(DataView.prototype.getUint32),
 }
