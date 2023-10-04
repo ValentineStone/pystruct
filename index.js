@@ -59,6 +59,7 @@ const typeUnpackers = {
 
 const textEncoder = new TextEncoder()
 const textDecoder = new TextDecoder()
+const emptyUint8Array = new Uint8Array(0)
 
 const typePackers = {
   x: () => undefined,
@@ -85,7 +86,7 @@ const typePackers = {
       viewSlice.set(new Uint8Array(value))
     else if (value instanceof Uint8Array)
       viewSlice.set(value)
-    else
+    else if (value !== undefined)
       textEncoder.encodeInto(String(value), viewSlice)
     return len
   },
@@ -96,7 +97,7 @@ const typePackers = {
       viewSlice.set(new Uint8Array(value))
     else if (value instanceof Uint8Array)
       viewSlice.set(value)
-    else {
+    else if (value !== undefined) {
       const { written } = textEncoder.encodeInto(String(value), viewSlice)
       len = written
     }
